@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login with Firebase</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: rgba(1, 1, 27, 1);
+      height: 100vh;
+      overflow-y: scroll;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .form-container {
+      position: fixed;
+      top: 200px;
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .input-container {
+      position: relative;
+      top: 20px;
+      margin:  20px auto;
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input {
+      width: 100%;
+      background: none;
+      border: none;
+      border-bottom: 2px solid white;
+      color: white;
+      font-size: 16px;
+      padding: 5px;
+      outline: none;
+      transition: border-bottom 0.3s;
+    }
+
+    input:focus {
+      border-bottom: 2px solid cyan;
+    }
+
+    label {
+      margin-top: 5px;
+      font-size: 14px;
+      color: white;
+    }
+
+    .btn {
+      background: blue;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      border-radius: 5px;
+      width: 83%;
+      color: white;
+      position: relative;
+      top: 20px;
+    }
+
+    .btn:hover {
+      background: lightblue;
+    }
+
+    p {
+      position: relative;
+      top: 20px;
+    }
+
+    .register {
+      margin-top: 10px;
+      font-size: 14px;
+      color: white;
+    }
+
+    .register a {
+      color: cyan;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .register a:hover {
+      text-decoration: underline;
+    }
+
+    #signupForm {
+      display: none;
+    }
+
+    .link-container {
+      margin-top: 10px;
+    }
+
+    .link-container a {
+      color: cyan;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .link-container a:hover {
+      text-decoration: underline;
+    }
+
+    /* Media Query for Mobile Devices */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      .form-container {
+        padding: 10px;
+      }
+
+      .btn {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+
+      .register {
+        font-size: 12px;
+      }
+
+      .link-container a {
+        font-size: 12px;
+      }
+    }
+
+    img {
+      width: 80%;
+      position: absolute;
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+  <img src="/images/codeigo-logo.png" alt="">
+  <div class="form-container">
+    <h1>Login</h1>
+    <div class="input-container">
+      <input type="email" id="Email" placeholder="Email" required />
+    </div>
+    <div class="input-container">
+      <input type="password" id="password" placeholder="Password" required />
+    </div>
+    <button id="submit" class="btn">Login</button>
+
+    <div class="link-container">
+      <p>Don't have an account? <a href="javascript:void(0);" id="showSignup">Sign Up</a></p>
+    </div>
+
+    <div id="signupForm">
+      <h1>Sign Up</h1>
+      <div class="input-container">
+        <input type="email" id="signupEmail" placeholder="Email" required />
+        <label for="signupEmail">Username</label>
+      </div>
+      <div class="input-container">
+        <input type="password" id="signupPassword" placeholder="Password" required />
+        <label for="signupPassword">Password</label>
+      </div>
+      <button id="signupBtn" class="btn">Sign Up</button>
+      <p>Already have an account? <a href="javascript:void(0);" id="showLogin">Login</a></p>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import Firebase services
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCA9gPlGVee5M5p9PwErbMfBK0ew-Sn8WA",
+      authDomain: "codeigo-3065f.firebaseapp.com",
+      projectId: "codeigo-3065f",
+      storageBucket: "codeigo-3065f.firebasestorage.app",
+      messagingSenderId: "1012436650095",
+      appId: "1:1012436650095:web:a68d24b8933d5d404e659a",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Login function
+    document.getElementById("submit").addEventListener("click", function () {
+      const email = document.getElementById("Email").value;
+      const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          alert("Login successful!");
+          window.location.href = "/introduction.html"; // Redirect after login
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
+        });
+    });
+
+    // Show Sign Up Form
+    document.getElementById("showSignup").addEventListener("click", function () {
+      document.getElementById("signupForm").style.display = "block";
+      document.getElementById("submit").style.display = "none";
+      document.getElementById("showSignup").style.display = "none";
+    });
+
+    // Sign Up function
+    document.getElementById("signupBtn").addEventListener("click", function () {
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          alert("Sign Up successful!");
+          window.location.href = "/introduction.html"; // Redirect after Sign Up
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
+        });
+    });
+
+    // Show Login Form
+    document.getElementById("showLogin").addEventListener("click", function () {
+      document.getElementById("signupForm").style.display = "none";
+      document.getElementById("submit").style.display = "block";
+      document.getElementById("showSignup").style.display = "block";
+    });
+  </script>
+</body>
+</html>
